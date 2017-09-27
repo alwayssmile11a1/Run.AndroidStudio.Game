@@ -16,9 +16,17 @@ public class Player extends Object{
 
     public Player(World world) {
         super(world);
+
+        //set Texture
         setTexture(new Texture("images/BlueBackground.png"));
-        setPosition(50,50);
+
+        //set Position
+        setPosition(100,100);
+
+        //set Size
         setSize(30,30);
+
+        //defineObject
         defineObject();
     }
 
