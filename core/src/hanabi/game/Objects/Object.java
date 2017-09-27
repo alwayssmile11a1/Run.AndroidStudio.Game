@@ -16,7 +16,7 @@ public class Object extends Sprite {
 
     public Object(World world) {
         this.world = world;
-        defineObject();
+
 
     }
 
@@ -33,7 +33,8 @@ public class Object extends Sprite {
 
     public void update(float dt)
     {
-        handleInput(dt);
+
+
     }
 
     public Body getBody()
