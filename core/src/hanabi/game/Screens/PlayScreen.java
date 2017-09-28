@@ -13,6 +13,7 @@ import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
 import hanabi.game.GameManager;
+import hanabi.game.Objects.Ground;
 import hanabi.game.Objects.Player;
 
 /**
@@ -29,8 +30,8 @@ public class PlayScreen implements Screen{
     //how well we want to see our map
     private Viewport gameViewPort;
     //world width and height
-    private int worldWidth;
-    private int worldHeight;
+    private float worldWidth;
+    private float worldHeight;
     //a camera to view our world
     private OrthographicCamera mainCamera;
 
@@ -46,19 +47,21 @@ public class PlayScreen implements Screen{
 
     Player player;
 
+    Ground ground;
+
     //this variable helps us to see the virtual shape of our world (virtual shape of all objects for example)
     //this variable should be eliminated when public the game
     private Box2DDebugRenderer b2DebugRenderer;
 
-    public PlayScreen(GameManager gameManager, int worldWidth, int worldHeight)
+    public PlayScreen(GameManager gameManager, int V_Width, int V_Height, float PPM)
     {
         //set up constructor variables
         this.gameManager = gameManager;
-        this.worldWidth = worldWidth;
-        this.worldHeight = worldHeight;
+        this.worldWidth = V_Width/PPM;
+        this.worldHeight = V_Height/PPM;
 
         //clear background color to a specified color
-        Gdx.gl.glClearColor(1f,0.7f,0.5f,0f);
+        Gdx.gl.glClearColor(0f,0f,0f,0f);
 
         //-----------------VIEW RELATED VARIABLES-----------------//
         //initialize a new camera
@@ -81,11 +84,14 @@ public class PlayScreen implements Screen{
         //initialize world with the gravity of -9.8f
         world = new World(new Vector2(0f,-9.8f),true);
 
+        //initialize box2DDebugRenderer
+        b2DebugRenderer = new Box2DDebugRenderer();
+
         //initialize player
         player = new Player(world);
 
-        //initialize box2D
-        b2DebugRenderer = new Box2DDebugRenderer();
+        //ground
+         ground = new Ground(world);
 
     }
 
@@ -103,8 +109,11 @@ public class PlayScreen implements Screen{
 
         //update player
         player.update(delta);
+        ground.update(delta);
 
-        //
+        //update camera to follow thí player
+        mainCamera.position.x = player.getBody().getPosition().x + 1;
+        mainCamera.update();
     }
 
     @Override
@@ -123,7 +132,9 @@ public class PlayScreen implements Screen{
         gameManager.batch.begin();
 
         //backgroundSprite.draw(gameManager.batch);
-        player.draw(gameManager.batch);
+        //player.draw(gameManager.batch);
+
+        ground.draw(gameManager.batch);
 
         //end of draw
         gameManager.batch.end();

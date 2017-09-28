@@ -14,6 +14,7 @@ public class GameManager extends Game {
 	//----FINAL VARIABLES-----//
 	public static final int WORLDWIDTH = 800;
 	public static final int WORLDHEIGHT = 400;
+	public static final float PPM = 100;
 
 
 	//batch is used for draw everything into a screen
@@ -33,7 +34,7 @@ public class GameManager extends Game {
 
 		//set screen
 		//setScreen(new MenuScreen(this));
-		setScreen(new PlayScreen(this,WORLDWIDTH,WORLDHEIGHT));
+		setScreen(new PlayScreen(this,WORLDWIDTH,WORLDHEIGHT, PPM));
 		//setScreen(new GameOverScreen(this));
 
 

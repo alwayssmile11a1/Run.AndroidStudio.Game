@@ -4,6 +4,8 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.World;
 
+import hanabi.game.GameManager;
+
 /**
  * Created by 2SMILE2 on 25/09/2017.
  */
@@ -17,8 +19,16 @@ public class Object extends Sprite {
     public Object(World world) {
         this.world = world;
 
+    }
+
+    //this function resize this object to be used more appropriate with Box2D
+    protected void usePixelPerMeter() {
+
+        setPosition(getX() / GameManager.PPM, getY() / GameManager.PPM);
+        setSize(getWidth() / GameManager.PPM, getHeight() / GameManager.PPM);
 
     }
+
 
     protected void defineObject()
     {
@@ -44,7 +54,10 @@ public class Object extends Sprite {
 
     public void dispose()
     {
-
+        if(getTexture()!=null)
+        {
+            getTexture().dispose();
+        }
     }
 
 
