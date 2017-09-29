@@ -17,8 +17,8 @@ public class Player extends Object{
     public static final short PLAYER_BIT = 2;
 
     //put this here to easier set these variable
-    float leftLinearVelocity = -1f;
-    float rightLinearVelocity = 1f;
+    float leftLinearVelocity = -1.5f;
+    float rightLinearVelocity = 1.5f;
     float upLinearVelocity = 4f;
 
 
@@ -55,7 +55,7 @@ public class Player extends Object{
         fDef.shape = bodyShape;
         fDef.filter.categoryBits = PLAYER_BIT;
         fDef.filter.maskBits = Ground.GROUND_BIT;
-        fDef.density = 1f;
+        fDef.density = 2f;
         body.createFixture(fDef).setUserData(this);
 
     }

@@ -6,9 +6,11 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.World;
+import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
@@ -47,7 +49,7 @@ public class PlayScreen implements Screen{
 
     Player player;
 
-    Ground ground;
+    Array<Ground> grounds;
 
     //this variable helps us to see the virtual shape of our world (virtual shape of all objects for example)
     //this variable should be eliminated when public the game
@@ -89,9 +91,14 @@ public class PlayScreen implements Screen{
 
         //initialize player
         player = new Player(world);
-
+        grounds = new Array<Ground>();
         //ground
-         ground = new Ground(world);
+        for (int i=1;i<20;i++)
+        {
+            grounds.add(new Ground(world,
+                    MathUtils.random(100f,200f) + 200*i, MathUtils.random(100f,300f),MathUtils.random(150f,250f),
+                    MathUtils.random(15f,30f),MathUtils.random(0.1f,2f)));
+        }
 
     }
 
@@ -109,7 +116,11 @@ public class PlayScreen implements Screen{
 
         //update player
         player.update(delta);
-        ground.update(delta);
+
+        for(Ground ground:grounds)
+        {
+            ground.update(delta);
+        }
 
         //update camera to follow thí player
         mainCamera.position.x = player.getBody().getPosition().x + 1;
@@ -134,7 +145,10 @@ public class PlayScreen implements Screen{
         //backgroundSprite.draw(gameManager.batch);
         //player.draw(gameManager.batch);
 
-        ground.draw(gameManager.batch);
+        for(Ground ground:grounds)
+        {
+            ground.draw(gameManager.batch);
+        }
 
         //end of draw
         gameManager.batch.end();
@@ -188,5 +202,14 @@ public class PlayScreen implements Screen{
         {
             player.dispose();
         }
+
+        if(grounds!=null)
+        {
+            for(Ground ground:grounds)
+            {
+                ground.dispose();
+            }
+        }
+
     }
 }

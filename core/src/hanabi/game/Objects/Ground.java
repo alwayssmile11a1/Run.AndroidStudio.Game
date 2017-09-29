@@ -1,6 +1,7 @@
 package hanabi.game.Objects;
 
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
@@ -14,19 +15,29 @@ public class Ground extends Object{
 
     public static final short GROUND_BIT = 1;
 
-    public Ground(World world) {
+    private float angularVelocity;
+
+    public Ground(World world, float x, float y, float width, float height, float angularVelocity) {
         super(world);
+
+        this.angularVelocity = angularVelocity;
 
         //set Texture
         setTexture(new Texture("images/BlueBackground.png"));
 
-        setPosition(100,100);
+        setPosition(x,y);
 
-        setSize(200f,50f);
+        setSize(width,height);
 
+        //convert to PPM
         usePixelPerMeter();
 
+        //this help us easily apply rotation
+        setOriginCenter();
+
         defineObject();
+
+        body.setAngularVelocity(angularVelocity);
     }
 
     @Override
@@ -59,8 +70,9 @@ public class Ground extends Object{
         //update texture position
         setPosition(body.getPosition().x-getWidth()/2,body.getPosition().y-getHeight()/2);
 
-        //body.setAngularVelocity(1f);
+        //body.setAngularVelocity(angularVelocity);
 
+        setRotation(body.getAngle()*MathUtils.radiansToDegrees);
     }
 
 
