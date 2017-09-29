@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" tiledversion="2017.09.13" orientation="orthogonal" renderorder="right-down" width="250" height="15" tilewidth="16" tileheight="16" infinite="0" nextobjectid="44">
+ <tileset firstgid="1" source="ColorTiledSet.tsx"/>
+ <layer name="StaticLayer" width="250" height="15">
+  <data encoding="base64" compression="zlib">
+   eJzt1jEOQDAYgFHRxWh2Evdx/8ENxGDRKqFCeC/5k6aDWL62VQUAAAAAAPzBUD/9B0Apeob7jXU8VzQhvV5L9X21+T4cH+CYLsTnw1bn8zrXfQltiGfper0HnHdn56mG251vur8h78yb/sn7PEXnUJ7O4ft0Dt+nc3iHCWP9FeE=
+  </data>
+ </layer>
+ <objectgroup name="StaticObjects">
+  <object id="11" x="48" y="128" width="80" height="16"/>
+  <object id="20" x="160" y="176" width="80" height="16"/>
+  <object id="21" x="288" y="144" width="64" height="16"/>
+  <object id="22" x="368" y="128" width="16" height="112"/>
+  <object id="23" x="416" y="128" width="16" height="112"/>
+  <object id="24" x="464" y="144" width="32" height="96"/>
+  <object id="28" x="528" y="128" width="16" height="16"/>
+  <object id="33" x="560" y="112" width="16" height="16"/>
+  <object id="35" x="608" y="128" width="16" height="16"/>
+  <object id="36" x="656" y="96" width="16" height="16"/>
+  <object id="38" x="736" y="160" width="96" height="16"/>
+  <object id="39" x="864" y="128" width="176" height="32"/>
+  <object id="41" x="944" y="160" width="32" height="80"/>
+ </objectgroup>
+</map>

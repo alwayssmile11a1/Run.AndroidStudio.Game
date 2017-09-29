@@ -1,6 +1,5 @@
 package hanabi.game.Objects;
 
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
@@ -23,8 +22,8 @@ public class Ground extends Object{
         this.angularVelocity = angularVelocity;
 
         //set Texture
-        setTexture(new Texture("images/WhiteRectangle.png"));
-        setColor(0.4f,0.4f,1f,1f);
+        //setTexture(new Texture("images/WhiteRectangle.png"));
+        //setColor(0.4f,0.4f,1f,1f);
         setPosition(x,y);
 
         setSize(width,height);

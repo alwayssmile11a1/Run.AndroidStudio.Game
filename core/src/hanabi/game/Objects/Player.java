@@ -30,7 +30,7 @@ public class Player extends Object{
         //set Texture
         setTexture(new Texture("images/WhiteRectangle.png"));
         setColor(0f,0.4f,1f,1f);
-        
+
         //set Position
         setPosition(200,200);
 

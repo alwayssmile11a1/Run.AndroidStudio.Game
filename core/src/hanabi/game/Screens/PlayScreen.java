@@ -6,17 +6,15 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.World;
-import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
 import hanabi.game.GameManager;
-import hanabi.game.Objects.Ground;
 import hanabi.game.Objects.Player;
+import hanabi.game.WorldCreator.MapCreator;
 
 /**
  * Created by 2SMILE2 on 25/09/2017.
@@ -26,7 +24,7 @@ import hanabi.game.Objects.Player;
 public class PlayScreen implements Screen{
 
     //GameManager
-    GameManager gameManager;
+    private GameManager gameManager;
 
     //-----------------VIEW RELATED VARIABLES-----------------//
     //how well we want to see our map
@@ -40,20 +38,24 @@ public class PlayScreen implements Screen{
 
     //----------------TEXTURE RELATED VARIABLES------------//
     //the background image
-    Sprite backgroundSprite;
+    private Sprite backgroundSprite;
 
 
     //----------------OBJECT RELATED VARIABLES------------//
     //world simulate collision, physics, etc.
-    World world;
+    private World world;
 
-    Player player;
+    private Player player;
 
-    Array<Ground> grounds;
 
     //this variable helps us to see the virtual shape of our world (virtual shape of all objects for example)
     //this variable should be eliminated when public the game
     private Box2DDebugRenderer b2DebugRenderer;
+
+
+    //----------------MAP RELATED VARIABLES------------//
+    MapCreator mapCreator;
+
 
     public PlayScreen(GameManager gameManager, int V_Width, int V_Height, float PPM)
     {
@@ -63,6 +65,7 @@ public class PlayScreen implements Screen{
         this.worldHeight = V_Height/PPM;
 
         //clear background color to a specified color
+        //Gdx.gl.glClearColor(0,0,0,1f);
         Gdx.gl.glClearColor(0.85f,0.85f,0.85f,0);
 
         //-----------------VIEW RELATED VARIABLES-----------------//
@@ -91,14 +94,18 @@ public class PlayScreen implements Screen{
 
         //initialize player
         player = new Player(world);
-        grounds = new Array<Ground>();
-        //ground
-        for (int i=1;i<20;i++)
-        {
-            grounds.add(new Ground(world,
-                    MathUtils.random(100f,200f) + 200*i, MathUtils.random(100f,300f),MathUtils.random(150f,250f),
-                    MathUtils.random(15f,30f),MathUtils.random(0.1f,2f)));
-        }
+//        grounds = new Array<Ground>();
+//        //ground
+//        for (int i=1;i<20;i++)
+//        {
+//            grounds.add(new Ground(world,
+//                    MathUtils.random(100f,200f) + 200*i, MathUtils.random(100f,300f),MathUtils.random(150f,250f),
+//                    MathUtils.random(15f,30f),MathUtils.random(0.1f,2f)));
+//        }
+
+
+        //----------------MAP RELATED VARIABLES------------//
+       mapCreator = new MapCreator(world,"maps/Map.tmx");
 
     }
 
@@ -117,14 +124,17 @@ public class PlayScreen implements Screen{
         //update player
         player.update(delta);
 
-        for(Ground ground:grounds)
-        {
-            ground.update(delta);
-        }
+//        for(Ground ground:grounds)
+//        {
+//            ground.update(delta);
+//        }
 
         //update camera to follow thí player
         mainCamera.position.x = player.getBody().getPosition().x + 1;
         mainCamera.update();
+
+        mapCreator.update(mainCamera);
+
     }
 
     @Override
@@ -139,16 +149,18 @@ public class PlayScreen implements Screen{
         //clear background color
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
+        mapCreator.renderMap();
+
         //draw things to batch
         gameManager.batch.begin();
 
         //backgroundSprite.draw(gameManager.batch);
         player.draw(gameManager.batch);
 
-        for(Ground ground:grounds)
-        {
-            ground.draw(gameManager.batch);
-        }
+//        for(Ground ground:grounds)
+//        {
+//            ground.draw(gameManager.batch);
+//        }
 
         //end of draw
         gameManager.batch.end();
@@ -203,13 +215,14 @@ public class PlayScreen implements Screen{
             player.dispose();
         }
 
-        if(grounds!=null)
-        {
-            for(Ground ground:grounds)
-            {
-                ground.dispose();
-            }
-        }
+//        if(grounds!=null)
+//        {
+//            for(Ground ground:grounds)
+//            {
+//                ground.dispose();
+//            }
+//        }
 
+        mapCreator.dispose();
     }
 }
