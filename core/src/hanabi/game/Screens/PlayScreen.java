@@ -63,7 +63,7 @@ public class PlayScreen implements Screen{
         this.worldHeight = V_Height/PPM;
 
         //clear background color to a specified color
-        Gdx.gl.glClearColor(0f,0f,0f,0f);
+        Gdx.gl.glClearColor(0.85f,0.85f,0.85f,0);
 
         //-----------------VIEW RELATED VARIABLES-----------------//
         //initialize a new camera
@@ -143,7 +143,7 @@ public class PlayScreen implements Screen{
         gameManager.batch.begin();
 
         //backgroundSprite.draw(gameManager.batch);
-        //player.draw(gameManager.batch);
+        player.draw(gameManager.batch);
 
         for(Ground ground:grounds)
         {

@@ -23,8 +23,8 @@ public class Ground extends Object{
         this.angularVelocity = angularVelocity;
 
         //set Texture
-        setTexture(new Texture("images/BlueBackground.png"));
-
+        setTexture(new Texture("images/WhiteRectangle.png"));
+        setColor(0.4f,0.4f,1f,1f);
         setPosition(x,y);
 
         setSize(width,height);

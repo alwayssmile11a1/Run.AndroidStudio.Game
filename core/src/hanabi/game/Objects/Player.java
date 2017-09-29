@@ -3,6 +3,8 @@ package hanabi.game.Objects;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
@@ -26,8 +28,9 @@ public class Player extends Object{
         super(world);
 
         //set Texture
-        //setTexture(new Texture("images/BlueBackground.png"));
-
+        setTexture(new Texture("images/WhiteRectangle.png"));
+        setColor(0f,0.4f,1f,1f);
+        
         //set Position
         setPosition(200,200);
 
@@ -35,6 +38,9 @@ public class Player extends Object{
         setSize(30f,30f);
 
         usePixelPerMeter();
+
+        //set this to rotate object in the center
+        setOriginCenter();
 
         //defineObject
         defineObject();
@@ -84,7 +90,10 @@ public class Player extends Object{
         //update texture position
         setPosition(body.getPosition().x-getWidth()/2,body.getPosition().y-getHeight()/2);
 
+        //rotate box2d
         body.setAngularVelocity(-body.getLinearVelocity().x*3);
+
+        setRotation(body.getAngle()*MathUtils.radiansToDegrees);
 
     }
 
