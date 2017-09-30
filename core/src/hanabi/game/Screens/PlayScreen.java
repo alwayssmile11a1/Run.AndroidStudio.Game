@@ -2,6 +2,7 @@ package hanabi.game.Screens;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
@@ -12,6 +13,8 @@ import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
+import box2dLight.PointLight;
+import box2dLight.RayHandler;
 import hanabi.game.GameManager;
 import hanabi.game.Objects.Player;
 import hanabi.game.WorldCreator.MapCreator;
@@ -54,11 +57,14 @@ public class PlayScreen implements Screen{
 
 
     //----------------MAP RELATED VARIABLES------------//
-    MapCreator mapCreator;
+    private MapCreator mapCreator;
 
+    RayHandler rayHandler;
+    PointLight pointLight;
 
     public PlayScreen(GameManager gameManager, int V_Width, int V_Height, float PPM)
     {
+
         //set up constructor variables
         this.gameManager = gameManager;
         this.worldWidth = V_Width/PPM;
@@ -106,6 +112,15 @@ public class PlayScreen implements Screen{
 
         //----------------MAP RELATED VARIABLES------------//
        mapCreator = new MapCreator(world,"maps/Map.tmx");
+
+        rayHandler = new RayHandler(world);
+        //light = new PointLight();
+        //light.
+
+        pointLight = new PointLight(rayHandler,500,new Color(0.84f,0.84f,0.84f,0.84f),100,4f,4f);
+        pointLight.setSoftnessLength(40f);
+        //System.out.print(pointLight.getSoftShadowLength());
+
 
     }
 
@@ -166,9 +181,12 @@ public class PlayScreen implements Screen{
         gameManager.batch.end();
 
 
+
         //render box2DDebug
         b2DebugRenderer.render(world,mainCamera.combined);
 
+        rayHandler.setCombinedMatrix(mainCamera);
+        rayHandler.updateAndRender();
     }
 
     @Override
@@ -224,5 +242,7 @@ public class PlayScreen implements Screen{
 //        }
 
         mapCreator.dispose();
+
+        rayHandler.dispose();
     }
 }
