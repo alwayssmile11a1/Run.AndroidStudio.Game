@@ -30,6 +30,7 @@ public class MapCreator {
         map = new TmxMapLoader().load(fileName);
         mapRenderer = new OrthogonalTiledMapRenderer(map, 1/ GameManager.PPM);
 
+
         //these variables are used for loop below. Since the BodyDef, fDef, Shape and Body can be safely reused, this will optimize our game a little more
 //        BodyDef bodyDef = new BodyDef();
 //        PolygonShape shape = new PolygonShape();
@@ -62,6 +63,11 @@ public class MapCreator {
 
         }
 
+    }
+
+    public Array<Ground> getGrounds()
+    {
+        return grounds;
     }
 
     public void renderMap()

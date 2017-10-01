@@ -52,6 +52,7 @@ public class Ground extends Object{
         PolygonShape bodyShape = new PolygonShape();
         bodyShape.setAsBox(this.getWidth()/2,this.getHeight()/2);
         fDef.shape = bodyShape;
+        fDef.friction = 1f;
         fDef.filter.categoryBits = GROUND_BIT;
         fDef.filter.maskBits = Player.PLAYER_BIT;
         body.createFixture(fDef).setUserData(this);

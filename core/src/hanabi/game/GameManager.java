@@ -14,8 +14,7 @@ public class GameManager extends Game {
 	//----FINAL VARIABLES-----//
 	public static final int WORLDWIDTH = 800;
 	public static final int WORLDHEIGHT = 400;
-	public static final float PPM = 100;
-
+	public static final float PPM = 100f;
 
 	//batch is used for draw everything into a screen
 	//we just need one of this because we only have to draw on it over and over again

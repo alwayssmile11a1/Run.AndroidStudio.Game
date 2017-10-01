@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.World;
@@ -60,7 +61,10 @@ public class PlayScreen implements Screen{
     private MapCreator mapCreator;
 
     RayHandler rayHandler;
-    PointLight pointLight;
+    PointLight pointLight1;
+    PointLight pointLight2;
+
+
 
     public PlayScreen(GameManager gameManager, int V_Width, int V_Height, float PPM)
     {
@@ -117,8 +121,10 @@ public class PlayScreen implements Screen{
         //light = new PointLight();
         //light.
 
-        pointLight = new PointLight(rayHandler,500,new Color(0.84f,0.84f,0.84f,0.84f),100,4f,4f);
-        pointLight.setSoftnessLength(40f);
+        pointLight1 = new PointLight(rayHandler,500,Color.GRAY,100,4f,4f);
+        //pointLight2 = new PointLight(rayHandler,500,new Color(0.84f,0.84f,0.84f,0.84f),100,4f,0f);
+        pointLight1.setSoftnessLength(50f);
+        //pointLight2.setSoftnessLength(10f);
         //System.out.print(pointLight.getSoftShadowLength());
 
 
@@ -145,7 +151,7 @@ public class PlayScreen implements Screen{
 //        }
 
         //update camera to follow thí player
-        mainCamera.position.x = player.getBody().getPosition().x + 1;
+        mainCamera.position.x = MathUtils.clamp(player.getBody().getPosition().x + 1,gameViewPort.getWorldWidth()/2,100f);
         mainCamera.update();
 
         mapCreator.update(mainCamera);
@@ -157,14 +163,14 @@ public class PlayScreen implements Screen{
         //call update
         update(delta);
 
-        //set camera to be used by this batch
-        gameManager.batch.setProjectionMatrix(mainCamera.combined);
-
-        //-----------DRAW-----------------//
         //clear background color
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         mapCreator.renderMap();
+
+        //-----------DRAW-----------------//
+        //set camera to be used by this batch
+        gameManager.batch.setProjectionMatrix(mainCamera.combined);
 
         //draw things to batch
         gameManager.batch.begin();

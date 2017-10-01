@@ -23,7 +23,6 @@ public class Player extends Object{
     float rightLinearVelocity = 1.5f;
     float upLinearVelocity = 4f;
 
-
     public Player(World world) {
         super(world);
 
@@ -45,6 +44,7 @@ public class Player extends Object{
         //defineObject
         defineObject();
     }
+
 
     @Override
     protected void defineObject() {
@@ -80,20 +80,32 @@ public class Player extends Object{
         {
             body.setLinearVelocity(leftLinearVelocity,body.getLinearVelocity().y);
         }
+
+        if(Gdx.input.isButtonPressed(Input.Buttons.LEFT)) {
+            startRewinding();
+        }
+        else
+        {
+            stopRewinding();
+        }
+
     }
 
     @Override
     public void update(float dt) {
 
+        super.update(dt);
+
         handleInput(dt);
 
         //update texture position
-        setPosition(body.getPosition().x-getWidth()/2,body.getPosition().y-getHeight()/2);
+        setPosition(body.getPosition().x - getWidth() / 2, body.getPosition().y - getHeight() / 2);
 
         //rotate box2d
-        body.setAngularVelocity(-body.getLinearVelocity().x*3);
+        body.setAngularVelocity(-body.getLinearVelocity().x * 3);
 
-        setRotation(body.getAngle()*MathUtils.radiansToDegrees);
+
+        setRotation(body.getAngle() * MathUtils.radiansToDegrees);
 
     }
 
