@@ -33,7 +33,7 @@ public class GameManager extends Game {
 
 		//set screen
 		//setScreen(new MenuScreen(this));
-		setScreen(new PlayScreen(this,WORLDWIDTH,WORLDHEIGHT, PPM));
+		setScreen(new PlayScreen(this));
 		//setScreen(new GameOverScreen(this));
 
 

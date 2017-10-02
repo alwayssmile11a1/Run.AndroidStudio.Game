@@ -68,14 +68,17 @@ public class Player extends Object{
 
     @Override
     public void handleInput(float dt) {
+        //Jump
         if(Gdx.input.isKeyJustPressed(Input.Keys.W))
         {
             body.setLinearVelocity(body.getLinearVelocity().x,upLinearVelocity);
         }
+        //Right
         if(Gdx.input.isKeyPressed(Input.Keys.D))
         {
             body.setLinearVelocity(rightLinearVelocity,body.getLinearVelocity().y);
         }
+        //Left
         if(Gdx.input.isKeyPressed(Input.Keys.A))
         {
             body.setLinearVelocity(leftLinearVelocity,body.getLinearVelocity().y);
@@ -104,7 +107,7 @@ public class Player extends Object{
         //rotate box2d
         body.setAngularVelocity(-body.getLinearVelocity().x * 3);
 
-
+        //rotate the texture corresponding to the body
         setRotation(body.getAngle() * MathUtils.radiansToDegrees);
 
     }

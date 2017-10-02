@@ -1,12 +1,11 @@
 package hanabi.game.Screens;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
@@ -41,8 +40,6 @@ public class PlayScreen implements Screen{
 
 
     //----------------TEXTURE RELATED VARIABLES------------//
-    //the background image
-    private Sprite backgroundSprite;
 
 
     //----------------OBJECT RELATED VARIABLES------------//
@@ -51,80 +48,65 @@ public class PlayScreen implements Screen{
 
     private Player player;
 
-
     //this variable helps us to see the virtual shape of our world (virtual shape of all objects for example)
     //this variable should be eliminated when public the game
     private Box2DDebugRenderer b2DebugRenderer;
 
 
-    //----------------MAP RELATED VARIABLES------------//
-    private MapCreator mapCreator;
+    //----------------WORLD RELATED VARIABLES------------//
+//    //the amount of time that the world needs to advance its physics
+//    float timeStep = 1/60f;
+    //manipulate world step - the bigger the worldStepSpeed, the faster the game simulates its physics
+    float worldStepSpeed = 1f;
+    //the length of time that the world have to take to be able to get back to its normal speed if it's being slowed down
+    float slowdownLength = 5f;
 
+    //map related variables
+    private MapCreator mapCreator;
     RayHandler rayHandler;
     PointLight pointLight1;
-    PointLight pointLight2;
 
-
-
-    public PlayScreen(GameManager gameManager, int V_Width, int V_Height, float PPM)
-    {
-
+    public PlayScreen(GameManager gameManager) {
         //set up constructor variables
         this.gameManager = gameManager;
-        this.worldWidth = V_Width/PPM;
-        this.worldHeight = V_Height/PPM;
+        this.worldWidth = gameManager.WORLDWIDTH / gameManager.PPM;
+        this.worldHeight = gameManager.WORLDHEIGHT / gameManager.PPM;
 
         //clear background color to a specified color
         //Gdx.gl.glClearColor(0,0,0,1f);
-        Gdx.gl.glClearColor(0.85f,0.85f,0.85f,0);
+        Gdx.gl.glClearColor(0.85f, 0.85f, 0.85f, 0);
 
         //-----------------VIEW RELATED VARIABLES-----------------//
         //initialize a new camera
         mainCamera = new OrthographicCamera();
         //initialze gameViewPort
-        gameViewPort = new StretchViewport(worldWidth,worldHeight,mainCamera);
+        gameViewPort = new StretchViewport(worldWidth, worldHeight, mainCamera);
         //gameViewPort = new FitViewport(worldWidth,worldHeight,mainCamera);
         //set mainCamera position to the center of gameviewport
-        mainCamera.position.set(gameViewPort.getWorldWidth()/2,gameViewPort.getWorldHeight()/2,0);
-
+        mainCamera.position.set(gameViewPort.getWorldWidth() / 2, gameViewPort.getWorldHeight() / 2, 0);
 
 
         //----------------TEXTURE RELATED VARIABLES------------//
-        //initialize background example
-        backgroundSprite = new Sprite( new Texture("images/BlueBackground.png"));
-        backgroundSprite.setSize(30,30);
 
 
         //----------------OBJECT RELATED VARIABLES------------//
         //initialize world with the gravity of -9.8f
-        world = new World(new Vector2(0f,-9.8f),true);
+        world = new World(new Vector2(0f, -9.8f), true);
 
         //initialize box2DDebugRenderer
         b2DebugRenderer = new Box2DDebugRenderer();
 
         //initialize player
         player = new Player(world);
-//        grounds = new Array<Ground>();
-//        //ground
-//        for (int i=1;i<20;i++)
-//        {
-//            grounds.add(new Ground(world,
-//                    MathUtils.random(100f,200f) + 200*i, MathUtils.random(100f,300f),MathUtils.random(150f,250f),
-//                    MathUtils.random(15f,30f),MathUtils.random(0.1f,2f)));
-//        }
 
 
-        //----------------MAP RELATED VARIABLES------------//
-       mapCreator = new MapCreator(world,"maps/Map.tmx");
+        //----------------WORLD RELATED VARIABLES------------//
+        //create map
+        mapCreator = new MapCreator(world, "maps/Map.tmx");
 
         rayHandler = new RayHandler(world);
-        //light = new PointLight();
-        //light.
-
-        pointLight1 = new PointLight(rayHandler,500,Color.GRAY,100,4f,4f);
-        //pointLight2 = new PointLight(rayHandler,500,new Color(0.84f,0.84f,0.84f,0.84f),100,4f,0f);
+        pointLight1 = new PointLight(rayHandler, 500, Color.GRAY, 100, 4f, 4f);
         pointLight1.setSoftnessLength(50f);
-        //pointLight2.setSoftnessLength(10f);
         //System.out.print(pointLight.getSoftShadowLength());
 
 
@@ -133,22 +115,29 @@ public class PlayScreen implements Screen{
     public void handleInput(float delta)
     {
 
+        //slow down the time
+        if(Gdx.input.isKeyJustPressed(Input.Keys.Q))
+        {
+            worldStepSpeed = 0.05f;
+        }
+        else
+        {
+            worldStepSpeed = worldStepSpeed + 1/(slowdownLength/delta);
+            worldStepSpeed = MathUtils.clamp(worldStepSpeed,0f,1f);
+        }
+
     }
 
+    //update things related physics
     public void update(float delta)
     {
         handleInput(delta);
 
         //update world
-        world.step(1/60f,6,2);
+        world.step(1/60f * worldStepSpeed,6,2);
 
         //update player
         player.update(delta);
-
-//        for(Ground ground:grounds)
-//        {
-//            ground.update(delta);
-//        }
 
         //update camera to follow thí player
         mainCamera.position.x = MathUtils.clamp(player.getBody().getPosition().x + 1,gameViewPort.getWorldWidth()/2,100f);
@@ -158,6 +147,7 @@ public class PlayScreen implements Screen{
 
     }
 
+    //render textures, maps, etc..
     @Override
     public void render(float delta) {
         //call update
@@ -178,10 +168,6 @@ public class PlayScreen implements Screen{
         //backgroundSprite.draw(gameManager.batch);
         player.draw(gameManager.batch);
 
-//        for(Ground ground:grounds)
-//        {
-//            ground.draw(gameManager.batch);
-//        }
 
         //end of draw
         gameManager.batch.end();
@@ -229,26 +215,17 @@ public class PlayScreen implements Screen{
             gameManager.dispose();
         }
 
-        if(backgroundSprite.getTexture()!=null)
-        {
-            backgroundSprite.getTexture().dispose();
-        }
-
         if(player!=null)
         {
             player.dispose();
         }
 
-//        if(grounds!=null)
-//        {
-//            for(Ground ground:grounds)
-//            {
-//                ground.dispose();
-//            }
-//        }
-
-        mapCreator.dispose();
-
-        rayHandler.dispose();
+        if(mapCreator!=null)
+        {
+            mapCreator.dispose();
+        }
+        if(rayHandler!=null) {
+            rayHandler.dispose();
+        }
     }
 }

@@ -16,17 +16,19 @@ import hanabi.game.GameManager;
 //parent class of any other objects, such as player, enemy, etc.
 public class Object extends Sprite {
 
-    protected World world;
-    protected Body body;
-    protected Array<Transform> positions;
-    protected Array<Vector2> velocities;
-    protected boolean isRewinding;
+    protected World world; //the world that this object is belonged to
+    protected Body body; //the body of this object
+    protected Array<Transform> positions; //the list of positions that this object was going through - this is for rewinding purpose
+    protected Array<Vector2> velocities; //the list of velocities that this object was going through - this is for rewinding purpose
+    protected boolean isRewinding; //is rewinding time or not?
+    protected float maximumRewindingTime;
 
     public Object(World world) {
         this.world = world;
         positions = new Array<Transform>();
         velocities = new Array<Vector2>();
         isRewinding = false;
+        maximumRewindingTime = 5f;
     }
 
     //this function resize this object to be used more appropriate with Box2D
@@ -37,10 +39,12 @@ public class Object extends Sprite {
 
     }
 
+    //record positions that this object was going through
     protected void recordPositions(float dt) {
-        if(isRewinding == false) {
 
-            if(positions.size > (int)(5f/dt))
+        if(isRewinding == false) {
+            //
+            if(positions.size > (int)(maximumRewindingTime/dt))
             {
                 positions.removeIndex(positions.size-1);
                 velocities.removeIndex(velocities.size-1);
@@ -50,6 +54,7 @@ public class Object extends Sprite {
         }
     }
 
+    //start rewinding - this fuction will automatically stop rewinding when it reaches maximum rewinding time
     protected void startRewinding () {
         if (positions.size >0) {
             isRewinding = true;
@@ -65,6 +70,7 @@ public class Object extends Sprite {
         }
     }
 
+    //stop rewinding time
     protected void stopRewinding () {
         isRewinding = false;
         //body.setType(BodyDef.BodyType.DynamicBody);
