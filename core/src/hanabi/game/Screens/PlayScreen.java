@@ -15,6 +15,7 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 
 import box2dLight.PointLight;
 import box2dLight.RayHandler;
+import hanabi.game.ControllerSystem.MobileController;
 import hanabi.game.GameManager;
 import hanabi.game.Objects.Player;
 import hanabi.game.WorldCreator.MapCreator;
@@ -66,6 +67,12 @@ public class PlayScreen implements Screen{
     RayHandler rayHandler;
     PointLight pointLight1;
 
+
+
+    //----------------CONTROLLER RELATED VARIABLES------------//
+    MobileController mobileController;
+
+
     public PlayScreen(GameManager gameManager) {
         //set up constructor variables
         this.gameManager = gameManager;
@@ -110,6 +117,8 @@ public class PlayScreen implements Screen{
         //System.out.print(pointLight.getSoftShadowLength());
 
 
+        //----------------CONTROLLER RELATED VARIABLES------------//
+        mobileController = new MobileController(gameManager);
     }
 
     public void handleInput(float delta)
@@ -124,6 +133,11 @@ public class PlayScreen implements Screen{
         {
             worldStepSpeed = worldStepSpeed + 1/(slowdownLength/delta);
             worldStepSpeed = MathUtils.clamp(worldStepSpeed,0f,1f);
+        }
+
+        if(mobileController.isLeftScreenPressed())
+        {
+            player.getBody().setLinearVelocity(1.5f,player.getBody().getLinearVelocity().y);
         }
 
     }
@@ -168,11 +182,10 @@ public class PlayScreen implements Screen{
         //backgroundSprite.draw(gameManager.batch);
         player.draw(gameManager.batch);
 
-
         //end of draw
         gameManager.batch.end();
 
-
+        mobileController.draw();
 
         //render box2DDebug
         b2DebugRenderer.render(world,mainCamera.combined);
@@ -185,6 +198,7 @@ public class PlayScreen implements Screen{
     public void resize(int width, int height) {
         //resize viewport if we resize our game world
         gameViewPort.update(width,height);
+        mobileController.resize(width,height);
     }
 
     @Override
@@ -227,5 +241,8 @@ public class PlayScreen implements Screen{
         if(rayHandler!=null) {
             rayHandler.dispose();
         }
+        if(mobileController!=null)
+            mobileController.dispose();
+
     }
 }

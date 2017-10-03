@@ -84,7 +84,7 @@ public class Player extends Object{
             body.setLinearVelocity(leftLinearVelocity,body.getLinearVelocity().y);
         }
 
-        if(Gdx.input.isButtonPressed(Input.Buttons.LEFT)) {
+        if(Gdx.input.isKeyPressed(Input.Keys.E)) {
             startRewinding();
         }
         else
